@@ -12,8 +12,8 @@ import UIKit
     
     /// Returns the background style to apply for the specified section. Returning a value other that `.none` will
     /// ensure UICollectionView will request a supplementary view from your collection's dataSource.
-    @objc optional func backgroundLayoutStyle(in collectionView: UICollectionView,
-                                              forSectionAt section: Int) -> BackgroundLayoutStyle
+    @objc optional func backgroundLayoutRegion(in collectionView: UICollectionView,
+                                               forSectionAt section: Int) -> BackgroundLayoutRegion
     
     /// Returns insets that will be used to layout the background view.
     @objc optional func backgroundLayoutInsets(in collectionView: UICollectionView,

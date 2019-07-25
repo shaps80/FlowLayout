@@ -1,6 +1,6 @@
 import UIKit
 
-@objc public enum BackgroundLayoutStyle: Int {
+@objc public enum BackgroundLayoutRegion: Int {
     /// No background will be shown
     case none
     /// A background will be added within the section's bounds including the header and footer areas

@@ -74,10 +74,6 @@ open class FlowLayout: UICollectionViewFlowLayout {
     open override func invalidateLayout(with context: UICollectionViewLayoutInvalidationContext) {
         guard let collectionView = collectionView else { return }
 
-        guard let context = context as? FlowLayoutInvalidationContext else {
-            fatalError("Expected: \(FlowLayoutInvalidationContext.self)")
-        }
-        
         super.invalidateLayout(with: context)
 
         if context.invalidateEverything {
@@ -87,7 +83,9 @@ open class FlowLayout: UICollectionViewFlowLayout {
             cachedGlobalFooterAttributes = nil
             cachedBackgroundAttributes.removeAll()
         }
-        
+
+        guard let context = context as? FlowLayoutInvalidationContext else { return }
+
         if context.invalidateGlobalHeaderLayoutAttributes {
             cachedGlobalHeaderAttributes = nil
         }
@@ -156,15 +154,15 @@ open class FlowLayout: UICollectionViewFlowLayout {
         for section in 0..<sectionCount {
             guard cachedBackgroundAttributes[section] == nil else { continue }
             
-            guard let style = (collectionView.delegate as? FlowLayoutDelegate)?
-                .backgroundLayoutStyle?(in: collectionView, forSectionAt: section),
-                style != .none else { continue }
+            guard let region = (collectionView.delegate as? FlowLayoutDelegate)?
+                .backgroundLayoutRegion?(in: collectionView, forSectionAt: section),
+                region != .none else { continue }
             
             let itemCount = collectionView.dataSource?.collectionView(collectionView, numberOfItemsInSection: section) ?? 0
             let insets = (collectionView.delegate as? FlowLayoutDelegate)?
                 .backgroundLayoutInsets?(in: collectionView, forSectionAt: section) ?? .zero
             
-            cachedBackgroundAttributes[section] = backgroundAttributes(section: section, numberOfItems: itemCount, style: style, insets: insets)
+            cachedBackgroundAttributes[section] = backgroundAttributes(section: section, numberOfItems: itemCount, style: region, insets: insets)
         }
     }
     
