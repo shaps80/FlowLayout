@@ -37,7 +37,27 @@ internal extension FlowLayout {
             return nil
         }
 
-        bgAttributes.frame = CGRect(x: x, y: y, width: w, height: h).inset(by: insets)
+        var additionalInsets: UIEdgeInsets
+
+        switch sectionInsetReference {
+        case .fromContentInset:
+            additionalInsets = collectionView.adjustedContentInset
+        case .fromLayoutMargins:
+            additionalInsets = collectionView.layoutMargins
+        case .fromSafeArea:
+            additionalInsets = collectionView.safeAreaInsets
+        default:
+            additionalInsets = .zero
+        }
+
+        // don't forget to reset the top/bottom
+        additionalInsets.top = 0
+        additionalInsets.bottom = 0
+
+        bgAttributes.frame = CGRect(x: x, y: y, width: w, height: h)
+            .inset(by: insets)
+            .inset(by: additionalInsets)
+
         bgAttributes.zIndex = UICollectionView.backgroundZIndex
 
         return bgAttributes

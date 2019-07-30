@@ -70,6 +70,15 @@ open class FlowLayout: UICollectionViewFlowLayout {
         
         return context
     }
+
+    open override func invalidateLayout() {
+        super.invalidateLayout()
+        cachedGlobalHeaderSize = .zero
+        cachedGlobalFooterSize = .zero
+        cachedGlobalFooterAttributes = nil
+        cachedGlobalHeaderAttributes = nil
+        cachedBackgroundAttributes.removeAll()
+    }
     
     open override func invalidateLayout(with context: UICollectionViewLayoutInvalidationContext) {
         guard let collectionView = collectionView else { return }
@@ -169,8 +178,8 @@ open class FlowLayout: UICollectionViewFlowLayout {
     // MARK: - Attributes
     
     open override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
-        let rect = rect.insetBy(dx: 0, dy: -(cachedGlobalHeaderSize.height + cachedGlobalFooterSize.height))
         var originalAttributes = super.layoutAttributesForElements(in: rect) ?? []
+        let rect = rect.insetBy(dx: 0, dy: -(cachedGlobalHeaderSize.height + cachedGlobalFooterSize.height))
         
         if let attributes = copy(of: cachedGlobalHeaderAttributes).map({ adjustedAttributes(for: $0) }),
             attributes.frame.intersects(rect) {
