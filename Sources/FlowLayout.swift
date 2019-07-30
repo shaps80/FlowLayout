@@ -178,25 +178,41 @@ open class FlowLayout: UICollectionViewFlowLayout {
     // MARK: - Attributes
     
     open override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
+        guard let collectionView = collectionView else { return nil }
         var originalAttributes = super.layoutAttributesForElements(in: rect) ?? []
-        let rect = rect.insetBy(dx: 0, dy: -(cachedGlobalHeaderSize.height + cachedGlobalFooterSize.height))
-        
-        if let attributes = copy(of: cachedGlobalHeaderAttributes).map({ adjustedAttributes(for: $0) }),
-            attributes.frame.intersects(rect) {
-            originalAttributes.append(attributes)
+
+        if collectionView.dataSource?.numberOfSections?(in: collectionView) ?? 0 > 0 {
+            if let attributes = copy(of: cachedGlobalHeaderAttributes).map({ adjustedAttributes(for: $0) }),
+                attributes.frame.intersects(rect) {
+                originalAttributes.append(attributes)
+            }
+
+            if let attributes = copy(of: cachedGlobalFooterAttributes).map({ adjustedAttributes(for: $0) }),
+                attributes.frame.intersects(rect) {
+                originalAttributes.append(attributes)
+            }
+
+            let attributes = cachedBackgroundAttributes.values
+                .filter({ $0.frame.intersects(rect) })
+
+            originalAttributes.append(contentsOf: attributes)
         }
-        
-        if let attributes = copy(of: cachedGlobalFooterAttributes).map({ adjustedAttributes(for: $0) }),
-            attributes.frame.intersects(rect) {
-            originalAttributes.append(attributes)
-        }
-        
-        let attributes = cachedBackgroundAttributes.values
-            .filter({ $0.frame.intersects(rect) })
-        
-        originalAttributes.append(contentsOf: attributes)
         
         return adjustedAttributes(for: copy(of: originalAttributes) ?? [])
+    }
+
+    open override func initialLayoutAttributesForAppearingSupplementaryElement(ofKind elementKind: String, at elementIndexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
+        let originalAttributes = copy(of: super.initialLayoutAttributesForAppearingSupplementaryElement(ofKind: elementKind, at: elementIndexPath))
+        switch elementKind {
+        case UICollectionView.elementKindGlobalHeader:
+            return originalAttributes
+        case UICollectionView.elementKindGlobalFooter:
+            return originalAttributes
+        case UICollectionView.elementKindBackground:
+            return originalAttributes
+        default:
+            return originalAttributes
+        }
     }
     
     open override func layoutAttributesForSupplementaryView(ofKind elementKind: String, at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
@@ -209,17 +225,18 @@ open class FlowLayout: UICollectionViewFlowLayout {
         case UICollectionView.elementKindGlobalFooter:
             attributes = cachedGlobalFooterAttributes
         case UICollectionView.elementKindBackground:
+            guard !indexPath.isEmpty else { return nil }
             attributes = cachedBackgroundAttributes[indexPath.section]
         default:
             attributes = super.layoutAttributesForSupplementaryView(ofKind: elementKind, at: indexPath) as? FlowLayoutAttributes
         }
-        
+
         return copy(of: attributes).map { adjustedAttributes(for: $0) }
     }
     
     open override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
         guard let attributes = super.layoutAttributesForItem(at: indexPath) else { return nil }
-        return copy(of: attributes).map { adjustedAttributes(for: $0) }
+        return copy(of: adjustedAttributes(for: attributes))
     }
     
     // MARK: - Override class types
