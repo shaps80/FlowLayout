@@ -93,34 +93,42 @@ open class FlowLayout: UICollectionViewFlowLayout {
             cachedBackgroundAttributes.removeAll()
         }
 
-        guard let context = context as? FlowLayoutInvalidationContext else { return }
-
-        if context.invalidateGlobalHeaderLayoutAttributes {
-            cachedGlobalHeaderAttributes = nil
-        }
-        
-        if context.invalidateGlobalFooterLayoutAttributes {
-            cachedGlobalFooterAttributes = nil
-        }
-        
-        if context.invalidateGlobalHeaderMetrics {
-            cachedGlobalHeaderSize = .zero
-        }
-        
-        if context.invalidateGlobalFooterMetrics {
-            cachedGlobalFooterSize = .zero
-        }
-
-        if context.invalidateBackgrounds
-            || context.invalidateFlowLayoutDelegateMetrics
-            || context.invalidateDataSourceCounts {
+        if context.invalidateDataSourceCounts {
             cachedBackgroundAttributes.removeAll()
         }
-        
-        // if a section has been invalidated in any way, we need to invalidate all backgrounds after (and including) that section
-        if let section = Array(context.invalidatedSections).sorted().first {
-            for index in 0..<(collectionView.dataSource?.collectionView(collectionView, numberOfItemsInSection: section) ?? 0) {
-                cachedBackgroundAttributes[index] = nil
+
+        if let context = context as? UICollectionViewFlowLayoutInvalidationContext {
+            if context.invalidateFlowLayoutDelegateMetrics, context.invalidateFlowLayoutAttributes {
+                cachedBackgroundAttributes.removeAll()
+            }
+        }
+
+        if let context = context as? FlowLayoutInvalidationContext {
+            if context.invalidateGlobalHeaderLayoutAttributes {
+                cachedGlobalHeaderAttributes = nil
+            }
+
+            if context.invalidateGlobalFooterLayoutAttributes {
+                cachedGlobalFooterAttributes = nil
+            }
+
+            if context.invalidateGlobalHeaderMetrics {
+                cachedGlobalHeaderSize = .zero
+            }
+
+            if context.invalidateGlobalFooterMetrics {
+                cachedGlobalFooterSize = .zero
+            }
+
+            if context.invalidateBackgrounds {
+                cachedBackgroundAttributes.removeAll()
+            }
+
+            // if a section has been invalidated in any way, we need to invalidate all backgrounds after (and including) that section
+            if let section = Array(context.invalidatedSections).sorted().first {
+                for index in 0..<(collectionView.dataSource?.collectionView(collectionView, numberOfItemsInSection: section) ?? 0) {
+                    cachedBackgroundAttributes[index] = nil
+                }
             }
         }
     }
@@ -199,20 +207,6 @@ open class FlowLayout: UICollectionViewFlowLayout {
         }
         
         return adjustedAttributes(for: copy(of: originalAttributes) ?? [])
-    }
-
-    open override func initialLayoutAttributesForAppearingSupplementaryElement(ofKind elementKind: String, at elementIndexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
-        let originalAttributes = copy(of: super.initialLayoutAttributesForAppearingSupplementaryElement(ofKind: elementKind, at: elementIndexPath))
-        switch elementKind {
-        case UICollectionView.elementKindGlobalHeader:
-            return originalAttributes
-        case UICollectionView.elementKindGlobalFooter:
-            return originalAttributes
-        case UICollectionView.elementKindBackground:
-            return originalAttributes
-        default:
-            return originalAttributes
-        }
     }
     
     open override func layoutAttributesForSupplementaryView(ofKind elementKind: String, at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
