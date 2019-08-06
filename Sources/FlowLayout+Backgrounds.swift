@@ -3,7 +3,7 @@ import UIKit
 internal extension FlowLayout {
 
     // Returns attributes for a section background
-    func backgroundAttributes(section: Int, numberOfItems: Int, style: BackgroundLayoutRegion, insets: UIEdgeInsets) -> FlowLayoutAttributes? {
+    func backgroundAttributes(section: Int, numberOfItems: Int, style: LayoutRegion, insets: UIEdgeInsets) -> FlowLayoutAttributes? {
         guard let collectionView = collectionView else { return nil }
 
         let firstIndex = 0

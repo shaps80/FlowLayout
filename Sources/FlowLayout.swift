@@ -170,14 +170,11 @@ open class FlowLayout: UICollectionViewFlowLayout {
         
         for section in 0..<sectionCount {
             guard cachedBackgroundAttributes[section] == nil else { continue }
-            
-            guard let region = (collectionView.delegate as? FlowLayoutDelegate)?
-                .backgroundLayoutRegion?(in: collectionView, forSectionAt: section),
-                region != .none else { continue }
+            let region = regionForBackground(in: section)
+            guard region != .none else { continue }
             
             let itemCount = collectionView.dataSource?.collectionView(collectionView, numberOfItemsInSection: section) ?? 0
-            let insets = (collectionView.delegate as? FlowLayoutDelegate)?
-                .backgroundLayoutInsets?(in: collectionView, forSectionAt: section) ?? .zero
+            let insets = insetsForBackground(in: section)
             
             cachedBackgroundAttributes[section] = backgroundAttributes(section: section, numberOfItems: itemCount, style: region, insets: insets)
         }

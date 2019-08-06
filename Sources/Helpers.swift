@@ -1,6 +1,6 @@
 import UIKit
 
-public extension FlowLayout {
+internal extension FlowLayout {
 
     var sizeForGlobalHeader: CGSize {
         guard let collectionView = collectionView else { return .zero }
@@ -16,9 +16,33 @@ public extension FlowLayout {
         return height == 0 ? .zero : CGSize(width: collectionView.bounds.width, height: height)
     }
 
+    func regionForBackground(in section: Int) -> LayoutRegion {
+        guard let collectionView = collectionView,
+            let delegate = collectionView.delegate as? FlowLayoutDelegate else {
+                return .none
+        }
+
+        return delegate.collectionView?(collectionView,
+                                        layout: self,
+                                        regionForBackgroundInSection: section)
+            ?? .none
+    }
+
+    func insetsForBackground(in section: Int) -> UIEdgeInsets {
+        guard let collectionView = collectionView,
+            let delegate = collectionView.delegate as? FlowLayoutDelegate else {
+                return .zero
+        }
+
+        return delegate.collectionView?(collectionView,
+                                        layout: self,
+                                        insetsForBackgroundInSection: section)
+            ?? .zero
+    }
+
 }
 
-public extension UICollectionViewFlowLayout {
+internal extension UICollectionViewFlowLayout {
     
     func insets(for section: Int) -> UIEdgeInsets {
         guard let collectionView = collectionView,
@@ -26,7 +50,9 @@ public extension UICollectionViewFlowLayout {
                 return .zero
         }
         
-        return delegate.collectionView?(collectionView, layout: self, insetForSectionAt: section)
+        return delegate.collectionView?(collectionView,
+                                        layout: self,
+                                        insetForSectionAt: section)
             ?? sectionInset
     }
     
@@ -36,7 +62,9 @@ public extension UICollectionViewFlowLayout {
                 return .zero
         }
         
-        return delegate.collectionView?(collectionView, layout: self, minimumInteritemSpacingForSectionAt: section)
+        return delegate.collectionView?(collectionView,
+                                        layout: self,
+                                        minimumInteritemSpacingForSectionAt: section)
             ?? minimumInteritemSpacing
     }
     
@@ -46,7 +74,9 @@ public extension UICollectionViewFlowLayout {
                 return .zero
         }
         
-        return delegate.collectionView?(collectionView, layout: self, minimumLineSpacingForSectionAt: section)
+        return delegate.collectionView?(collectionView,
+                                        layout: self,
+                                        minimumLineSpacingForSectionAt: section)
             ?? minimumLineSpacing
     }
     

@@ -1,12 +1,23 @@
 import UIKit
 
-@objc public enum BackgroundLayoutRegion: Int {
+@objc public enum LayoutRegion: Int {
     /// No background will be shown
     case none
     /// A background will be added within the section's bounds including the header and footer areas
     case outerBounds
     /// A background will be added within the section's bounds excluding the header and footer areas
     case innerBounds
+}
+
+@objc public enum LayoutAlignment: Int {
+    /// No alignment adjustments will be made
+    case none
+    /// Cells will be aligned using their leading edge
+    case leading
+    /// Cells will be aligned using their trailining edge
+    case trailing
+    /// Cells will be sized equally on a line
+    case justified
 }
 
 /// Represents a set of preferences for configuring a global element's behaviour in a `Composed.FlowLayout`
