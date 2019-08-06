@@ -19,6 +19,7 @@
 		5424642622E6430A00080A9F /* FlowLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 5424641C22E6430A00080A9F /* FlowLayout.h */; };
 		5424642722E6430A00080A9F /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5424641D22E6430A00080A9F /* FlowLayout.swift */; };
 		5424642822E6430A00080A9F /* FlowLayout+Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5424641E22E6430A00080A9F /* FlowLayout+Types.swift */; };
+		549D2BF422F9D7DA00C24AA3 /* FlowLayout+Alignment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549D2BF322F9D7DA00C24AA3 /* FlowLayout+Alignment.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 		5424641C22E6430A00080A9F /* FlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlowLayout.h; sourceTree = "<group>"; };
 		5424641D22E6430A00080A9F /* FlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
 		5424641E22E6430A00080A9F /* FlowLayout+Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FlowLayout+Types.swift"; sourceTree = "<group>"; };
+		549D2BF322F9D7DA00C24AA3 /* FlowLayout+Alignment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FlowLayout+Alignment.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +87,7 @@
 				5424641922E6430A00080A9F /* FlowLayoutDelegate.swift */,
 				5424641A22E6430A00080A9F /* FlowLayoutItemAttributes.swift */,
 				5424641B22E6430A00080A9F /* FlowLayout+Backgrounds.swift */,
+				549D2BF322F9D7DA00C24AA3 /* FlowLayout+Alignment.swift */,
 				5424641C22E6430A00080A9F /* FlowLayout.h */,
 				5424641D22E6430A00080A9F /* FlowLayout.swift */,
 				5424641E22E6430A00080A9F /* FlowLayout+Types.swift */,
@@ -176,6 +179,7 @@
 				5424642122E6430A00080A9F /* FlowLayoutInvalidationContext.swift in Sources */,
 				5424642722E6430A00080A9F /* FlowLayout.swift in Sources */,
 				5424642022E6430A00080A9F /* FlowLayout+Adjustments.swift in Sources */,
+				549D2BF422F9D7DA00C24AA3 /* FlowLayout+Alignment.swift in Sources */,
 				5424642822E6430A00080A9F /* FlowLayout+Types.swift in Sources */,
 				5424642522E6430A00080A9F /* FlowLayout+Backgrounds.swift in Sources */,
 				5424641F22E6430A00080A9F /* Constants.swift in Sources */,

@@ -1,6 +1,6 @@
 import UIKit
 
-internal extension FlowLayout {
+public extension FlowLayout {
 
     var sizeForGlobalHeader: CGSize {
         guard let collectionView = collectionView else { return .zero }
@@ -40,9 +40,21 @@ internal extension FlowLayout {
             ?? .zero
     }
 
+    func alignment(in section: Int) -> LayoutAlignment {
+        guard let collectionView = collectionView,
+            let delegate = collectionView.delegate as? FlowLayoutDelegate else {
+                return .none
+        }
+
+        return delegate.collectionView?(collectionView,
+                                        layout: self,
+                                        alignmentInSection: section)
+        ?? .none
+    }
+
 }
 
-internal extension UICollectionViewFlowLayout {
+public extension UICollectionViewFlowLayout {
     
     func insets(for section: Int) -> UIEdgeInsets {
         guard let collectionView = collectionView,

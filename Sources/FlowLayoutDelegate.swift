@@ -37,14 +37,17 @@ import UIKit
                                        layout: UICollectionViewLayout,
                                        insetsForBackgroundInSection section: Int) -> UIEdgeInsets
 
-    // MARK: Deprecations
-
-    @available(*, deprecated, renamed: "collectionView(_:layout:regionForBackgroundInSection:)")
-    @objc optional func backgroundLayoutRegion(in collectionView: UICollectionView,
-                                forSectionAt section: Int) -> LayoutRegion
-
-    @available(*, deprecated, renamed: "collectionView(_:layout:insetsForBackgroundInSection:)")
-    @objc optional func backgroundLayoutInsets(in collectionView: UICollectionView,
-                                forSectionAt section: Int) -> UIEdgeInsets
+    /// Returns alignment that will be used to layout the cells.
+    ///
+    /// Alignment only affects the cells. It does not affect the layout of section headers or footers.
+    ///
+    /// - Parameters:
+    ///   - collectionView: The collection view object displaying the layout
+    ///   - layout: The layout object requesting the information
+    ///   - section: The index number of the section whose insets are needed
+    /// - Returns: The alignment to apply to the cells in the section
+    @objc optional func collectionView(_ collectionView: UICollectionView,
+                                       layout: UICollectionViewLayout,
+                                       alignmentInSection section: Int) -> LayoutAlignment
     
 }

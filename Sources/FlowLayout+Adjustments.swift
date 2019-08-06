@@ -5,8 +5,6 @@ extension FlowLayout {
     // MARK: - Attributes Adjustments
     
     func adjustedAttributes(for attributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes {
-        let attributes = attributes
-        
         switch attributes.representedElementKind {
         case UICollectionView.elementKindGlobalHeader:
             attributes.frame.origin = adjustedGlobalHeaderOrigin
@@ -52,6 +50,7 @@ extension FlowLayout {
                 let count = collectionView.numberOfItems(inSection: attributes.indexPath.section)
                 attributes.isFirstInSection = attributes.indexPath.item == 0
                 attributes.isLastInSection = attributes.indexPath.item == count - 1
+                applyAlignment(alignment(in: attributes.indexPath.section), for: attributes)
             }
             
             attributes.frame.origin.y += adjustedOrigin.y

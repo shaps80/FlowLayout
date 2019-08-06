@@ -13,11 +13,7 @@ import UIKit
     /// No alignment adjustments will be made
     case none
     /// Cells will be aligned using their leading edge
-    case leading
-    /// Cells will be aligned using their trailining edge
-    case trailing
-    /// Cells will be sized equally on a line
-    case justified
+    case left
 }
 
 /// Represents a set of preferences for configuring a global element's behaviour in a `Composed.FlowLayout`
