@@ -5,11 +5,16 @@ extension FlowLayout {
     // MARK: - Attributes Adjustments
     
     func adjustedAttributes(for attributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes {
-        switch attributes.representedElementKind {
+        guard let collectionView = collectionView,
+            let adjusted = attributes as? FlowLayoutAttributes else {
+                return attributes
+        }
+
+        switch adjusted.representedElementKind {
         case UICollectionView.elementKindGlobalHeader:
-            attributes.frame.origin = adjustedGlobalHeaderOrigin
-            attributes.frame.size = adjustedGlobalHeaderSize
-            attributes.zIndex = UICollectionView.globalHeaderZIndex
+            adjusted.frame.origin = adjustedGlobalHeaderOrigin
+            adjusted.frame.size = adjustedGlobalHeaderSize
+            adjusted.zIndex = UICollectionView.globalHeaderZIndex
             
             if globalHeaderConfiguration.pinsToBounds {
                 let offset = adjustedGlobalHeaderOffset
@@ -17,17 +22,17 @@ extension FlowLayout {
                 if globalHeaderConfiguration.prefersFollowContent, offset.y > 0 {
                     // do nothing
                 } else {
-                    attributes.frame.origin.y += offset.y
+                    adjusted.frame.origin.y += offset.y
                 }
                 
                 if globalHeaderConfiguration.pinsToContent, offset.y < 0 {
-                    attributes.frame.size.height -= offset.y
+                    adjusted.frame.size.height -= offset.y
                 }
             }
         case UICollectionView.elementKindGlobalFooter:
-            attributes.frame.origin = adjustedGlobalFooterOrigin
-            attributes.frame.size = adjustedGlobalFooterSize
-            attributes.zIndex = UICollectionView.globalFooterZIndex
+            adjusted.frame.origin = adjustedGlobalFooterOrigin
+            adjusted.frame.size = adjustedGlobalFooterSize
+            adjusted.zIndex = UICollectionView.globalFooterZIndex
             
             if globalFooterConfiguration.pinsToBounds {
                 let offset = adjustedGlobalFooterOffset
@@ -35,28 +40,42 @@ extension FlowLayout {
                 if globalFooterConfiguration.prefersFollowContent, offset.y < 0 {
                     // do nothing
                 } else {
-                    attributes.frame.origin.y += offset.y
+                    adjusted.frame.origin.y += offset.y
                 }
                 
                 if globalFooterConfiguration.pinsToContent, offset.y > 0 {
-                    attributes.frame.origin.y -= offset.y
-                    attributes.frame.size.height += offset.y
+                    adjusted.frame.origin.y -= offset.y
+                    adjusted.frame.size.height += offset.y
                 }
             }
         default:
-            if let collectionView = collectionView,
-                attributes.representedElementCategory == .cell,
-                let attributes = attributes as? FlowLayoutAttributes {
-                let count = collectionView.numberOfItems(inSection: attributes.indexPath.section)
-                attributes.isFirstInSection = attributes.indexPath.item == 0
-                attributes.isLastInSection = attributes.indexPath.item == count - 1
-                applyAlignment(alignment(in: attributes.indexPath.section), for: attributes)
+            // make sure we adjust here so we include all other elements
+            adjusted.frame.origin.y += adjustedOrigin.y
+
+            guard adjusted.representedElementCategory == .cell else { break }
+
+            let itemsCount = collectionView.dataSource?.collectionView(collectionView, numberOfItemsInSection: adjusted.indexPath.section) ?? 0
+            adjusted.isFirstInSection = adjusted.indexPath.item == 0
+            adjusted.isLastInSection = adjusted.indexPath.item == itemsCount - 1
+
+            switch alignment(in: adjusted.indexPath.section) {
+            case .left:
+                guard adjusted.indexPath.item > 0 else { break }
+
+                let previousIndexPath = IndexPath(item: adjusted.indexPath.item - 1, section: adjusted.indexPath.section)
+                let previousAttributes = layoutAttributesForItem(at: previousIndexPath)!
+
+                // if our attributes are not on the same line as the previous attributes we don't need to do anything
+                guard attributes.center.y == previousAttributes.center.y else { break }
+
+                let spacing = interitemSpacing(for: attributes.indexPath.section)
+                adjusted.frame.origin.x = previousAttributes.frame.maxX + spacing
+            case .none:
+                break
             }
-            
-            attributes.frame.origin.y += adjustedOrigin.y
         }
-        
-        return attributes
+
+        return adjusted
     }
     
     func adjustedAttributes(for attributes: [UICollectionViewLayoutAttributes]) -> [UICollectionViewLayoutAttributes] {

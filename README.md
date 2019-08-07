@@ -8,7 +8,7 @@ Checkout <a href="https://github.com/shaps80/FlowLayout-Demo">FlowLayoutDemo</a>
 
 ### Release 2.0.0
 
-> Notes: `FlowLayoutDelegate` has completely new function signatures, so please ensure you've updated all of your implementations to use the correct signature otherwise your layout will not behave correctly.
+> `FlowLayoutDelegate` has completely new function signatures, so please ensure you've updated all of your implementations to use the correct signature otherwise your layout will not behave correctly.
 
 **Added**
 

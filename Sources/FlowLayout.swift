@@ -243,7 +243,7 @@ open class FlowLayout: UICollectionViewFlowLayout {
 }
 
 // MARK: - Helpers
-private extension FlowLayout {
+internal extension FlowLayout {
     
     func copy(of attributes: UICollectionViewLayoutAttributes?) -> FlowLayoutAttributes? {
         return attributes?.copy() as? FlowLayoutAttributes
